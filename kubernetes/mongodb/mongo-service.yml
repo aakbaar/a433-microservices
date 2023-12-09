@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: karsajobs
+    tier: backend
+  name: karsajobs-db
+
+spec:
+  selector:
+    app: karsajobs
+    tier: backend
+  ports:
+    - port: 27017
+  clusterIP: None

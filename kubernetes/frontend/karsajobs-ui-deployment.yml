@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: karsajobs
+    tier: frontend
+  name: karsajobs-fe
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: karsajobs
+      tier: frontend
+
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+        tier: frontend
+
+    spec:
+      containers:
+        - name: karsajobs-fe
+          image: aakbaar/karsajobs-ui:latest
+          ports:
+            - containerPort: 8000

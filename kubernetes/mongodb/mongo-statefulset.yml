@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: karsajobs
+    tier: backend
+  name: karsajobs-db
+
+spec:
+  selector:
+    matchLabels:
+      app: karsajobs
+      tier: backend
+
+  serviceName: karsajobs-db
+  minReadySeconds: 10
+  replicas: 1
+
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+        tier: backend
+    
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo
+          image: mongo:latest
+          ports:
+            - name: mongo
+              containerPort: 27017
+          volumeMounts:
+            - name: mongo-conf
+              mountPath: /config
+            - name: mongo-secrt
+              mountPath: /etc/mongo-credentials
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME_FILE
+              value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+          
+
+      volumes:
+        - name: mongo-conf
+          configMap:
+            name: mongo-conf
+            items:
+              - key: mongo.conf
+                path: mongo.conf
+        - name: mongo-secrt
+          secret:
+            secretName: mongo-secrt
+        - name: mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongo-pv-claim
