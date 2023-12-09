@@ -1,0 +1,2 @@
+https://hub.docker.com/repository/docker/aakbaar/order-service/general
+https://hub.docker.com/repository/docker/aakbaar/shipping-service/general
