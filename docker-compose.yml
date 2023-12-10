@@ -3,31 +3,32 @@ services:
   order-service:
     image: aakbaar/order-service:latest
     ports:
-      - 3010:3000
+      - 3000:3000
     environment:
-      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
       - rabbitmq
     restart: always
+    networks:
+      - rabbitmq_network
 
   shipping-service:
     image: aakbaar/shipping-service:latest
     ports:
-      - 3011:3001
+      - 3001:3001
     environment:
-      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
       - rabbitmq
     restart: always
+    networks:
+      - rabbitmq_network
 
   rabbitmq:
     image: rabbitmq:3.11-management
     ports:
-      - 5673:5672
-      - 15673:15672
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - 5672:5672
+      - 15672:15672
     volumes:
         - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
         - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
